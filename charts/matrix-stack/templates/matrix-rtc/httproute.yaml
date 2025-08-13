@@ -1,13 +1,8 @@
-{{- /*
-Copyright 2024-2025 New Vector Ltd
-
-SPDX-License-Identifier: AGPL-3.0-only
-*/ -}}
 {{- with .Values.matrixRTC -}}
 {{- if .enabled -}}
-{{- if not .ingress.httpRoute -}}
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+{{- if .ingress.httpRoute -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
 {{- $extraAnnotations := dict }}
 {{- if .sfu.enabled }}
@@ -23,27 +18,27 @@ metadata:
   name: {{ $.Release.Name }}-matrix-rtc
   namespace: {{ $.Release.Namespace }}
 spec:
-{{- include "element-io.ess-library.ingress.tls" (dict "root" $ "context" (dict "ingress" .ingress "ingressName" "matrix-rtc")) | nindent 2 }}
-{{- include "element-io.ess-library.ingress.className" (dict "root" $ "context" .ingress.className) | nindent 2 }}
+  parentRefs:
+  - name: {{ $.Values.httpRoute.gateway.name }}
+    namespace: {{ $.Values.httpRoute.gateway.namespace }}
+  hostnames:
+  - {{ (tpl .ingress.host $) | quote }}
   rules:
-  - host: {{ (tpl .ingress.host $) | quote }}
-    http:
-      paths:
-      - path: /sfu/get
-        pathType: Prefix
-        backend:
-          service:
-            name: "{{ $.Release.Name }}-matrix-rtc-authorisation-service"
-            port:
-              name: http
-{{ if .sfu.enabled }}
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: "{{ $.Release.Name }}-matrix-rtc-sfu"
-            port:
-              number: 7880
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /sfu/get
+    backendRefs:
+    - name: "{{ $.Release.Name }}-matrix-rtc-authorisation-service"
+      port: 8080
+{{- if .sfu.enabled }}
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: "{{ $.Release.Name }}-matrix-rtc-sfu"
+      port: 7880
 {{- end -}}
 {{- end }}
 {{- end }}

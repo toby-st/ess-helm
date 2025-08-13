@@ -6,6 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 {{- with .Values.matrixAuthenticationService -}}
 {{- if .enabled -}}
+{{- if not .ingress.httpRoute -}}
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -28,5 +30,6 @@ spec:
             name: {{ $.Release.Name }}-matrix-authentication-service
             port:
               name: http
+{{- end -}}
 {{- end }}
 {{- end }}

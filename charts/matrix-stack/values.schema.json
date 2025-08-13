@@ -31,6 +31,23 @@
       },
       "additionalProperties": false
     },
+    "httpRoute": {
+      "type": "object",
+      "properties": {
+        "gateway": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "namespace": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
     "matrixTools": {
       "type": "object",
       "properties": {
@@ -998,6 +1015,9 @@
               "type": "string"
             },
             "tlsEnabled": {
+              "type": "boolean"
+            },
+            "httpRoute": {
               "type": "boolean"
             },
             "tlsSecret": {
@@ -2209,6 +2229,9 @@
             },
             "className": {
               "type": "string"
+            },
+            "httpRoute": {
+              "type": "boolean"
             },
             "tlsEnabled": {
               "type": "boolean"
@@ -3817,6 +3840,9 @@
             },
             "className": {
               "type": "string"
+            },
+            "httpRoute": {
+              "type": "boolean"
             },
             "tlsEnabled": {
               "type": "boolean"
@@ -5664,6 +5690,9 @@
             },
             "className": {
               "type": "string"
+            },
+            "httpRoute": {
+              "type": "boolean"
             },
             "tlsEnabled": {
               "type": "boolean"
@@ -11765,6 +11794,9 @@
                   "null"
                 ]
               }
+            },
+            "httpRoute": {
+              "type": "boolean"
             },
             "className": {
               "type": "string"

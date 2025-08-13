@@ -6,6 +6,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 
 {{- with $.Values.synapse -}}
 {{- if .enabled -}}
+{{- if not .ingress.httpRoute -}}
+
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -68,5 +70,6 @@ spec:
               name: haproxy-synapse
 {{- end }}
 {{- end }}
+{{- end -}}
 {{- end -}}
 {{- end -}}
